@@ -4,6 +4,14 @@ BASE = os.path.abspath(os.path.dirname(__file__))
 
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = '/tmp/jellyroll.db'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DATABASE_NAME,
+    }
+}
+
 INSTALLED_APPS = ['django.contrib.contenttypes', 'tagging', 'jellyroll']
 
 JELLYROLL_PROVIDERS = ['jellyroll.providers.*']
