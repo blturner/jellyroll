@@ -315,7 +315,7 @@ class CodeCommit(models.Model):
         ordering = ["-revision"]
 
     def __unicode__(self):
-        return "[%s] %s" % (self.format_revision(), text.truncate_words(self.message, 10))
+        return "[%s] %s" % (self.format_revision(), text.Truncator(self.message).chars(10))
 
     def format_revision(self):
         """
@@ -340,7 +340,7 @@ class Message(models.Model):
     links = models.ManyToManyField('ContentLink',blank=True,null=True)
     
     def __unicode__(self):
-        return text.truncate_words(self.message, 30)
+        return text.Truncator(self.message).chars(30)
 
 class ContentLink(models.Model):
     """
