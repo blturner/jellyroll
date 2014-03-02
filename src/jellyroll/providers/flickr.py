@@ -4,6 +4,7 @@ import urllib
 from django.conf import settings
 from django.db import transaction
 from django.utils.encoding import smart_unicode
+from django.utils.timezone import utc
 from jellyroll.models import Item, Photo
 from jellyroll.providers import utils
 
@@ -97,8 +98,8 @@ def _handle_photo(flickr, photo_id, secret, license, timestamp):
     title = smart_unicode(info["title"]["_content"])
     description = smart_unicode(info["description"]["_content"])
     comment_count = utils.safeint(info["comments"]["_content"])
-    date_uploaded = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["posted"]))
-    date_updated = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["lastupdate"]))
+    date_uploaded = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["posted"]), tz=utc)
+    date_updated = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["lastupdate"]), tz=utc)
     
     log.debug("Handling photo: %r (taken %s)" % (title, timestamp))
     photo, created = Photo.objects.get_or_create(

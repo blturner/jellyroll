@@ -11,9 +11,12 @@ instead of ``Item.objects.all()``.
 
 import time
 import datetime
+import pytz
+from django.conf import settings
 from django.core import urlresolvers
 from django.template import loader, RequestContext
 from django.http import Http404, HttpResponse
+from django.utils.timezone import utc
 from jellyroll.models import Item
 
 def today(request, **kwargs):
@@ -172,7 +175,11 @@ def month(request, year, month, queryset=None,
     # Handle the initial queryset
     if not queryset:
         queryset = Item.objects.all()
-    queryset = queryset.filter(timestamp__range=(first_day, last_day))
+    # Convert first_day and last_day to datetimes because Django spits warnings
+    # about naive date objects
+    first_day_dt = datetime.datetime.combine(first_day, datetime.time().replace(tzinfo=utc))
+    last_day_dt = datetime.datetime.combine(last_day, datetime.time().replace(tzinfo=utc))
+    queryset = queryset.filter(timestamp__range=(first_day_dt, last_day_dt))
     if not queryset.query.order_by:
         queryset = queryset.order_by("timestamp")
     
@@ -242,13 +249,17 @@ def day(request, year, month, day, queryset=None, recent_first=False,
         raise Http404("No items; no views.")
     
     today = datetime.date.today()
-    if day < first.timestamp.date() or day > today:
+    
+    LOCAL = pytz.timezone(settings.TIME_ZONE)
+    timestamp = first.timestamp.astimezone(LOCAL).date()
+
+    if day < timestamp or day > today:
         raise Http404("Invalid day (%s .. %s)" % (first.timestamp.date(), today))
     
     # Calculate the previous day
     previous = day - datetime.timedelta(days=1)
     previous_link = urlresolvers.reverse("jellyroll.views.calendar.day", args=previous.strftime("%Y %b %d").lower().split())
-    if previous < first.timestamp.date():
+    if previous < timestamp:
         previous = previous_link = None
     
     # And the next month
@@ -258,8 +269,8 @@ def day(request, year, month, day, queryset=None, recent_first=False,
         next = next_link = None
     
     # Some lookup values...
-    timestamp_range = (datetime.datetime.combine(day, datetime.time.min), 
-                       datetime.datetime.combine(day, datetime.time.max))
+    timestamp_range = (datetime.datetime.combine(day, datetime.time.min).replace(tzinfo=utc),
+                       datetime.datetime.combine(day, datetime.time.max).replace(tzinfo=utc))
     
     # Handle the initial queryset
     if not queryset:

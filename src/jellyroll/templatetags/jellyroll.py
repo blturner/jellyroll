@@ -5,6 +5,7 @@ from django import template
 from django.db import models
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
+from django.utils.timezone import utc
 
 try:
     from collections import defaultdict
@@ -277,11 +278,11 @@ class GetJellyrollItemsNode(template.Node):
         
         # Assume literals or strings
         if d == "now":
-            return datetime.datetime.now()
+            return datetime.datetime.now(utc)
         if d == "today":
             return datetime.date.today()
         try:
-            return dateutil.parser.parse(d)
+            return dateutil.parser.parse(d).replace(tzinfo=utc)
         except ValueError:
             return None
 

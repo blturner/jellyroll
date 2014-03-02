@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import signals
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import force_unicode
+from django.utils.timezone import utc
 from tagging.fields import TagField
 
 class ItemManager(models.Manager):
@@ -39,7 +40,7 @@ class ItemManager(models.Manager):
             timestamp = instance.timestamp
         if timestamp is None:
             update_timestamp = False
-            timestamp = datetime.datetime.now()
+            timestamp = datetime.datetime.now(utc)
         else:
             update_timestamp = True
                     
@@ -101,4 +102,4 @@ class ItemManager(models.Manager):
         try:
             return qs.order_by('-timestamp')[0].timestamp
         except IndexError:
-            return datetime.datetime.fromtimestamp(0)
+            return datetime.datetime.fromtimestamp(0, tz=utc)

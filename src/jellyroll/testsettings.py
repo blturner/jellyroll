@@ -1,7 +1,13 @@
 import os
+import warnings
+
+warnings.filterwarnings(
+        'error', r"DateTimeField received a naive datetime",
+        RuntimeWarning, r'django\.db\.models\.fields')
 
 BASE = os.path.abspath(os.path.dirname(__file__))
 
+USE_TZ = True
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = '/tmp/jellyroll.db'
 

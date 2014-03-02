@@ -3,6 +3,7 @@ import dateutil.parser
 import dateutil.tz
 from django.utils import simplejson
 from django.utils.encoding import force_unicode
+from django.utils.timezone import utc
 from django.conf import settings
 from jellyroll.providers.utils.anyetree import etree
 
@@ -43,11 +44,9 @@ def fetch_resource(url, method="GET", body=None, username=None, password=None, h
 
 def parsedate(s):
     """
-    Convert a string into a (local, naive) datetime object.
+    Convert a string into a UTC timezone aware datetime object.
     """
-    dt = dateutil.parser.parse(s)
-    if dt.tzinfo:
-        dt = dt.astimezone(dateutil.tz.tzlocal()).replace(tzinfo=None)
+    dt = dateutil.parser.parse(s).replace(tzinfo=utc)
     return dt
 
 def safeint(s):
