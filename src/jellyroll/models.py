@@ -60,7 +60,7 @@ class Bookmark(models.Model):
     description   = models.CharField(max_length=255)
     extended      = models.TextField(blank=True)
     thumbnail     = models.ImageField(upload_to="img/jellyroll/bookmarks/%Y/%m", blank=True)
-    thumbnail_url = models.URLField(blank=True, verify_exists=False, max_length=1000)
+    thumbnail_url = models.URLField(blank=True, max_length=1000)
     to_read       = models.BooleanField(default=False)
     
     def __unicode__(self):
@@ -293,7 +293,7 @@ class CodeRepository(models.Model):
     slug = models.SlugField()
     username = models.CharField(max_length=100, help_text="Your username/email for this SCM.")
     public_changeset_template = models.URLField(
-        verify_exists = False, blank = True,
+        blank = True,
         help_text = "Template for viewing a changeset publically. Use '%s' for the revision number")
     url = models.URLField()
 
