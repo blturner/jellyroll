@@ -1,0 +1,12 @@
+{% extends "jellyroll/base.html" %}
+
+
+{% block content %}
+    <h1>Tag list</h1>
+
+    <ul>
+    {% for tag in tag_list %}
+        <li><a href="{% url 'jellyroll_tag_item_list' tag %}">{{ tag }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

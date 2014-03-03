@@ -1,29 +1,36 @@
 """
 Views for looking at Jellyroll items by tag.
-
 """
-
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
-from django.views.generic.list_detail import object_list
-from django.template import RequestContext
-from django.http import Http404
+from django.views.generic.list import ListView
 from jellyroll.models import Item
 from tagging.models import TaggedItem, Tag
 
 
-def tag_list(request):
-    #tags = sorted( Tag.objects.usage_for_model(Item),
-    #               cmp=lambda x,y: cmp(x.name.lower(),y.name.lower()) )
-    item_ct = ContentType.objects.get_for_model(Item)
-    tag_items = TaggedItem.objects.filter(content_type=item_ct)
-    tags = Tag.objects.filter(pk__in=[ tag_item.tag.pk for tag_item in tag_items ])
-    return object_list(request, tags, template_object_name='tag',
-                       template_name='jellyroll/tags/tag_list.html')
+class TagList(ListView):
+    context_object_name = 'tag_list'
+    template_name = 'jellyroll/tags/tag_list.html'
 
-def tag_item_list(request, tag):
-    tag = get_object_or_404(Tag,name=tag)
-    items = TaggedItem.objects.get_by_model(Item,tag)
-    return object_list(request, items, template_object_name='item',
-                       template_name='jellyroll/tags/tag_item_list.html', 
-                       extra_context={'tag':tag})
+    def get_queryset(self):
+        item_ct = ContentType.objects.get_for_model(Item)
+        tag_items = TaggedItem.objects.filter(content_type=item_ct)
+        queryset = Tag.objects.filter(pk__in=[tag_item.tag.pk for tag_item in tag_items])
+        return queryset
+
+
+class TagItemList(ListView):
+    context_object_name = 'item_list'
+    template_name = 'jellyroll/tags/tag_item_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TagItemList, self).get_context_data(**kwargs)
+        tag = get_object_or_404(Tag, name=self.kwargs['tag'])
+        context['tag'] = tag
+        return context
+
+    def get_queryset(self):
+        name = self.kwargs['tag']
+        tag = get_object_or_404(Tag, name=name)
+        queryset = TaggedItem.objects.get_by_model(Item, tag)
+        return queryset
