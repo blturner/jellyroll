@@ -1,5 +1,5 @@
-from django.conf.urls.defaults import *
 from jellyroll.views import tags
+from django.conf.urls import *
 
 
 urlpatterns = patterns('',

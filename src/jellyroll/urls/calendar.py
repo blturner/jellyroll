@@ -2,7 +2,7 @@
 URLs for doing a jellyroll site by date (i.e. ``2007/``, ``2007/may/``, etc.)
 """
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from jellyroll.views import calendar
 
 urlpatterns = patterns('', 
