@@ -8,6 +8,9 @@ warnings.filterwarnings(
 BASE = os.path.abspath(os.path.dirname(__file__))
 
 USE_TZ = True
+
+SECRET_KEY = 's3cr3t'
+
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = '/tmp/jellyroll.db'
 
