@@ -98,8 +98,13 @@ def _handle_photo(flickr, photo_id, secret, license, timestamp):
     title = smart_unicode(info["title"]["_content"])
     description = smart_unicode(info["description"]["_content"])
     comment_count = utils.safeint(info["comments"]["_content"])
-    date_uploaded = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["posted"]), tz=utc)
-    date_updated = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["lastupdate"]), tz=utc)
+
+    if settings.USE_TZ:
+        date_uploaded = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["posted"]), tz=utc)
+        date_updated = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["lastupdate"]), tz=utc)
+    else:
+        date_uploaded = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["posted"]))
+        date_updated = datetime.datetime.fromtimestamp(utils.safeint(info["dates"]["lastupdate"]))
     
     log.debug("Handling photo: %r (taken %s)" % (title, timestamp))
     photo, created = Photo.objects.get_or_create(

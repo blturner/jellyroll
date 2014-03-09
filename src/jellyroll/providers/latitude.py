@@ -9,7 +9,7 @@ import datetime
 import logging
 from django.conf import settings
 from django.db import transaction
-from django.utils.timezone import utc
+from django.utils.timezone import now, utc
 from jellyroll.models import Location, Item
 from jellyroll.providers import utils
 
@@ -41,7 +41,10 @@ def _update_location(user_id, since):
     
     lat, lng = map(str, feature['geometry']['coordinates'])
     name = feature['properties']['reverseGeocode']
-    timestamp = datetime.datetime.fromtimestamp(feature['properties']['timeStamp'], tz=utc)
+    if settings.USE_TZ:
+        timestamp = datetime.datetime.fromtimestamp(feature['properties']['timeStamp'], tz=utc)
+    else:
+        timestamp = datetime.datetime.fromtimestamp(feature['properties']['timeStamp'])
     if timestamp > since:
         log.debug("New location: %s", name)
         loc = Location(latitude=lat, longitude=lng, name=name)

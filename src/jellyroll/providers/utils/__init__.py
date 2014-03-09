@@ -44,10 +44,12 @@ def fetch_resource(url, method="GET", body=None, username=None, password=None, h
 
 def parsedate(s):
     """
-    Convert a string into a UTC timezone aware datetime object.
+    Convert a string into a UTC timezone aware datetime object if
+    settings.USE_TZ is True. Otherwise returns a naive datetime.
     """
-    dt = dateutil.parser.parse(s).replace(tzinfo=utc)
-    return dt
+    if settings.USE_TZ:
+        return dateutil.parser.parse(s).replace(tzinfo=utc)
+    return dateutil.parser.parse(s).replace(tzinfo=None)
 
 def safeint(s):
     """Always returns an int. Returns 0 on failure."""
