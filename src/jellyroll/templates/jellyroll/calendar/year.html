@@ -2,17 +2,19 @@
 
 {# Example template for a the calendar year view #}
 
-{% block title %}Items in {{ year }}{% endblock %}
+{% block title %}Items in {{ year|date:"Y" }}{% endblock %}
 
 {% block content %}
-  <h1>Items in {{ year }}</h1>
+  <h1>Items in {{ year|date:"Y" }}</h1>
   <p>
-    {% if previous %}<a href="{{ previous_link }}">&larr; {{ previous }}</a>{% endif %}
-    {% if next %}<a href="{{ next_link }}">{{ next }} &rarr;</a>{% endif %}
+    {% if previous_year %}<a href="{% url 'jellyroll_calendar_year' year=previous_year|date:'Y' %}">&larr; {{ previous_year|date:'Y' }}</a>{% endif %}
+    {% if next_year %}<a href="{% url 'jellyroll_calendar_year' year=next_year|date:'Y' %}">{{ next_year|date:'Y' }} &rarr;</a>{% endif %}
   </p>
   <ul>
     {% for item in items %}
       <li>{{ item.timestamp|date:"F j" }}: {{ item }}</li>
     {% endfor %}
   </ul>
+
+  {% include 'jellyroll/snippets/pagination.html' %}
 {% endblock %}

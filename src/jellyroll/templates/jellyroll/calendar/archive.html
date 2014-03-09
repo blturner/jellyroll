@@ -1,0 +1,17 @@
+{% extends 'jellyroll/base.html' %}
+
+
+{% block title %}Item archive{% endblock %}
+
+
+{% block content %}
+    <h1>Item archive</h1>
+
+    <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    {% include 'jellyroll/snippets/pagination.html' %}
+{% endblock %}

@@ -20,7 +20,7 @@ class CalendarViewTest(TestCase):
         
     def testYearView(self):
         today, response, context = self.callView("/%Y/")
-        self.assertEqual(context["year"], today.year)
+        self.assertEqual(context["year"].year, today.year)
         self.assertEqual(len(context["items"]), Item.objects.count())
         
     def testMonthView(self):
@@ -34,21 +34,19 @@ class CalendarViewTest(TestCase):
         self.assertEqual(context["day"], today)
         self.assertEqual(len(context["items"]), Item.objects.count())
         
-    def testTodayView(self):
+    def testArchiveIndexView(self):
         today, response, context = self.callView("/")
-        self.assertEqual(context["day"], today)
         self.assertEqual(len(context["items"]), Item.objects.count())
-        self.assertEqual(context["is_today"], True)
-        self.assertTemplateUsed(response, "jellyroll/calendar/today.html")
+        self.assertTemplateUsed(response, "jellyroll/calendar/archive.html")
         
     def testDayViewOrdering(self):
         today, response, context = self.callView("/%Y/%b/%d/")
-        first = context["items"][0].timestamp
-        last = list(context["items"])[-1].timestamp
-        self.assert_(first < last, "first: %s, last: %s" % (first, last))
+        oldest = context['items'].reverse()[0].timestamp
+        newest = context['items'][0].timestamp
+        self.assert_(newest > oldest, "newest: %s, oldest: %s" % (newest, oldest))
         
-    def testTodayViewOrdering(self):
+    def testArchiveIndexViewOrdering(self):
         today, response, context = self.callView("/")
-        first = context["items"][0].timestamp
-        last = list(context["items"])[-1].timestamp
-        self.assert_(first > last, "first: %s, last: %s" % (first, last))
+        oldest = context['items'].reverse()[0].timestamp
+        newest = context["items"][0].timestamp
+        self.assert_(newest > oldest, "newest: %s, oldest: %s" % (newest, oldest))

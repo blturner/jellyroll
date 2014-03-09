@@ -7,12 +7,14 @@
 {% block content %}
   <h1>Items {% if is_today %}today{% else %}on {{ day|date:"j F Y" }}{% endif %}</h1>
   <p>
-    {% if previous %}<a href="{{ previous_link }}">&larr; {{ previous|date:"j F Y" }}</a>{% endif %}
-    {% if next %}<a href="{{ next_link }}">{{ next|date:"j F Y" }} &rarr;</a>{% endif %}
+    {% if previous_day %}<a href="{% url 'jellyroll_calendar_day' year=previous_day.year month=previous_day|date:'b' day=previous_day|date:'j' %}">&larr; {{ previous_day|date:"j F Y" }}</a>{% endif %}
+    {% if next_day %}<a href="{% url 'jellyroll_calendar_day' year=next_day.year month=next_day|date:'b' day=next_day|date:'j' %}">{{ next_day|date:"j F Y" }} &rarr;</a>{% endif %}
   </p>
   <ul>
     {% for item in items %}
       <li>{{ item }}</li>
     {% endfor %}
   </ul>
+
+  {% include 'jellyroll/snippets/pagination.html' %}
 {% endblock %}
