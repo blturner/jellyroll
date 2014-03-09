@@ -1,10 +1,11 @@
+import json
 import urllib
 import urlparse
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db import models
-from django.utils import simplejson, text
+from django.utils import text
 from django.utils.encoding import smart_unicode
 from jellyroll.managers import ItemManager
 from tagging.fields import TagField
@@ -119,10 +120,10 @@ class Photo(models.Model):
     # EXIF metadata
     _exif = models.TextField(blank=True)
     def _set_exif(self, d):
-        self._exif = simplejson.dumps(d)
+        self._exif = json.dumps(d)
     def _get_exif(self):
         if self._exif:
-            return simplejson.loads(self._exif)
+            return json.loads(self._exif)
         else:
             return {}
     exif = property(_get_exif, _set_exif, "Photo EXIF data, as a dict.")

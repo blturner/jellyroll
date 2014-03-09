@@ -1,7 +1,7 @@
 import httplib2
+import json
 import dateutil.parser
 import dateutil.tz
-from django.utils import simplejson
 from django.utils.encoding import force_unicode
 from django.utils.timezone import utc
 from django.conf import settings
@@ -22,8 +22,8 @@ def getxml(url, **kwargs):
     
 def getjson(url, **kwargs):
     """Fetch and parse some JSON. Returns the deserialized JSON."""
-    json = fetch_resource(url, **kwargs)
-    return simplejson.loads(json)
+    data = fetch_resource(url, **kwargs)
+    return json.loads(data)
 
 def fetch_resource(url, method="GET", body=None, username=None, password=None, headers=None):
     h = httplib2.Http(timeout=15)
