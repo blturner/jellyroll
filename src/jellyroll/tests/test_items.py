@@ -110,7 +110,7 @@ class VideoTest(TestCase):
         self.assertEqual(v.embed_url, "http://www.youtube.com/v/1gvGDsIYrrQ")
         
 class ItemTest(TestCase):
-    fixtures = ["bookmarks.json", "photos.json", "trac.json", "tracks.json", "videos.json", "websearches.json"]
+    fixtures = ["bookmarks.json", "photos.json", "tracks.json", "videos.json", "websearches.json"]
     
     def testSorting(self):
         items = list(Item.objects.all())

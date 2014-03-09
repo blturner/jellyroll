@@ -4,7 +4,7 @@ from django.conf import settings
 from jellyroll.models import Item
 
 class CalendarViewTest(TestCase):
-    fixtures = ["bookmarks.json", "photos.json", "trac.json", "tracks.json", "videos.json", "websearches.json"]
+    fixtures = ["bookmarks.json", "photos.json", "tracks.json", "videos.json", "websearches.json"]
     
     def setUp(self):
         settings.ROOT_URLCONF = "jellyroll.urls.calendar"

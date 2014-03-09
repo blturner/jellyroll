@@ -94,7 +94,7 @@ class GetJellyrollItemsTagSyntaxTest(TestCase):
         self.assertNodeException("get_jellyroll_items limit 10 excludetype frog as items")
         
 class GetJellyrollItemsTagTest(TagTestCase):
-    fixtures = ["bookmarks.json", "photos.json", "trac.json", "tracks.json", "videos.json", "websearches.json"]
+    fixtures = ["bookmarks.json", "photos.json", "tracks.json", "videos.json", "websearches.json"]
 
     def setUp(self):
         self.installTagLibrary('jellyroll.templatetags.jellyroll')
