@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from django.utils.functional import memoize
 from django.utils.http import urlquote
 from django.utils.encoding import smart_str, smart_unicode
+from django.utils.timezone import utc
 from httplib2 import HttpLib2Error
 from jellyroll.models import Item, Track
 from jellyroll.providers import utils
@@ -47,6 +48,9 @@ def update():
 
         # date delivered as UTC
         timestamp = datetime.datetime.fromtimestamp(int(track.find('date').get('uts')))
+        if settings.USE_TZ:
+            timestamp = datetime.datetime.fromtimestamp(
+                int(track.find('date').get('uts'))).replace(tzinfo=utc)
         if utils.JELLYROLL_ADJUST_DATETIME:
             timestamp = utils.utc_to_local_timestamp(int(track.find('date').get('uts')))
 
