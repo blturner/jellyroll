@@ -21,7 +21,7 @@ setup(
     install_requires = [
         'django-tagging >= 0.3.1, < 0.4',
         'Django >= 1.1',
-        'PIL',
+        'Pillow == 2.4.0',
         'python-dateutil',
         'pytz == 2009e',
         'setuptools',
