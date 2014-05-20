@@ -24,7 +24,7 @@ class PinboardClient(object):
         auth_token = '{0}:{1}'.format(self.username, self.api_token)
         params['auth_token'] = auth_token
         url = ('https://api.pinboard.in/{0}?'.format(self.method)) + urllib.urlencode(params).replace("%3A", ":")
-        return utils.getxml(url, username=self.username, password=self.password)
+        return utils.getxml(url)
 
 
 def enabled():
