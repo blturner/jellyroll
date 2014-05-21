@@ -26,7 +26,7 @@ def getjson(url, **kwargs):
     return json.loads(data)
 
 def fetch_resource(url, method="GET", body=None, username=None, password=None, headers=None):
-    h = httplib2.Http(timeout=15)
+    h = httplib2.Http(timeout=15, disable_ssl_certificate_validation=True)
     h.force_exception_to_status_code = True
     
     if username is not None or password is not None:
