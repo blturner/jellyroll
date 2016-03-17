@@ -6,7 +6,8 @@ from django.conf import settings
 try:
     set
 except NameError:
-    from sets import Set as set     # Python 2.3 fallback
+    # Python 2.3 fallback
+    from sets import Set as set
 
 log = logging.getLogger("jellyroll.update")
 
@@ -23,10 +24,11 @@ def active_providers():
         for p in to_load:
             try:
                 mod = __import__(p, '', '', [''])
+                
+                if mod.enabled():
+                    providers[p] = mod
             except ImportError, e:
                 log.error("Couldn't import provider %r: %s" % (p, e))
-            if mod.enabled():
-                providers[p] = mod
     return providers
     
 def expand_star(mod_name):

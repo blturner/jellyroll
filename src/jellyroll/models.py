@@ -3,12 +3,16 @@ import urllib
 import urlparse
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
 from django.db import models
 from django.utils import text
 from django.utils.encoding import smart_unicode
 from jellyroll.managers import ItemManager
 from tagging.fields import TagField
+
+try:
+    from django.contrib.contenttypes import generic
+except ImportError:
+    from django.contrib.contenttypes import fields as generic
 
 class Item(models.Model):
     """

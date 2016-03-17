@@ -58,6 +58,7 @@ def update():
             _update_bookmarks_from_date(pinboard, dt)
 
 
+@transaction.atomic
 def _update_bookmarks_from_date(pinboard, dt):
     log.debug("Reading bookmarks from %s", dt)
     # xml = pinboard.posts.get(dt=dt.strftime("%Y-%m-%d"))
@@ -65,7 +66,6 @@ def _update_bookmarks_from_date(pinboard, dt):
     for post in xml.getiterator('post'):
         info = dict((k, smart_unicode(post.get(k))) for k in post.keys())
         _handle_bookmark(info)
-_update_bookmarks_from_date = transaction.commit_on_success(_update_bookmarks_from_date)
 
 
 def _handle_bookmark(info):

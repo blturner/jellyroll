@@ -3,10 +3,14 @@ import dateutil.parser
 import urllib
 from django import template
 from django.conf import settings
-from django.db import models
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
 from django.utils.timezone import now, utc
+
+try:
+    from django.apps import apps
+except ImportError:
+    from django.db import models as apps
 
 try:
     from collections import defaultdict
@@ -15,7 +19,7 @@ except ImportError:
 
 
 # Hack until relative imports
-Item = models.get_model("jellyroll", "item")
+Item = apps.get_model("jellyroll", "item")
 
 register = template.Library()
 
