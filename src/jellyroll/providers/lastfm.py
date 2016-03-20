@@ -4,13 +4,14 @@ import logging
 from django.conf import settings
 from django.db import transaction
 from django.template.defaultfilters import slugify
-from django.utils.functional import memoize
+from django.utils.functional import cached_property
 from django.utils.http import urlquote
 from django.utils.encoding import smart_str, smart_unicode
 from django.utils.timezone import utc
 from httplib2 import HttpLib2Error
 from jellyroll.models import Item, Track
 from jellyroll.providers import utils
+
 
 #
 # API URLs
@@ -76,7 +77,8 @@ def _tags_for_track(artist_name, track_name):
     tags = set()
     for url in urls:
         tags.update(_tags_for_url(url))
-        
+
+@cached_property
 def _tags_for_url(url):
     tags = set()
     try:
@@ -95,12 +97,11 @@ def _tags_for_url(url):
             tags.add(tag[:50])
     
     return tags
-            
-# Memoize tags to avoid unnecessary API calls.
-_tag_cache = {}
-_tags_for_url = memoize(_tags_for_url, _tag_cache, 1)
 
-@transaction.commit_on_success
+_tag_cache = {}
+
+
+@transaction.atomic
 def _handle_track(artist_name, artist_mbid, track_name, track_mbid, url, timestamp, tags):
     t = Track(
         artist_name = artist_name,
